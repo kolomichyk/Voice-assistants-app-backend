@@ -14,7 +14,7 @@ urlpatterns = [
     path(r'actions/<int:pk>/', views.get_detail, name='actions-detail'),
     path(r'actions/<int:pk>/put/', views.put_detail, name='actions-put'),
     path(r'actions/<int:pk>/delete/', views.delete_detail, name='actions-delete'),
-    path(r'actions/<int:pk>/put/application/<int:application_id>', views.put_detail_to_application, name='actions-put-to-application'),
+    path(r'actions/<int:pk>/put/application/', views.put_detail_to_application, name='actions-put-to-application'),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
     path(r'applications/', views.get_list_applications, name='applications-list'),

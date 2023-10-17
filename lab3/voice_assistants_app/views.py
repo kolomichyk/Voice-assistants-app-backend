@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework import status
-from voice_assistants_app.serializers import ActionsSerializer, ApplicationsSerializer
-from voice_assistants_app.models import Actions, Applications, Users
+from voice_assistants_app.serializers import ActionsSerializer, ApplicationsSerializer, ApplicationsactionsSerializer
+from voice_assistants_app.models import Actions, Applications, Users, Applicationsactions
 from rest_framework.decorators import api_view
 import json
 from datetime import datetime
@@ -91,36 +91,37 @@ def put_detail(request, pk, format=None):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['Put'])
-def put_detail_to_application(request, pk, application_id, format=None):
+def put_detail_to_application(request, pk, format=None):
     """
     Добавление заявки в услугу
     """
-    action = get_object_or_404(Actions, pk=pk)
+    current_user = CurrentUserSingleton.get_instance()
     try: 
-        get_object_or_404(Applications, pk=application_id)
+        Applications.objects.filter(customer_id=current_user.user_id, status="Зарегистрирован").latest('creation_date')
     except:
-        data = {
-            "application_id": 1,
-            "status": "зарегистрирован",
-            "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "formed_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "completed_at": "0000-00-00 00:00:00",
-            "customer": 1,
-            "moderator_id": 1
-        }
-        json_data = json.dumps(data)
-        print(json_data)
-        return Response("Test", status=status.HTTP_400_BAD_REQUEST)
-        serializer = ActionsSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    serializer = ActionsSerializer(action, data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        application = Applications(
+            application_id = 5,
+            status = "зарегистрирован",
+            created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            formed_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            completed_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            customer_id = 1,
+            moderator_id = 1
+        )
+        application.save()
+    action = Actions.objects.get(id=pk)
+    try:
+        applicationsactions = Applicationsactions.objects.get(application_id=application.application_id, action_id_id=action.id)
+        return Response("Такое действие уже добавлено заявку")
+    except Applicationsactions.DoesNotExist:
+        applicationsactions = Applicationsactions(
+            application_id = application.application_id,
+            action_id_id = action.id
+        )
+        applicationsactions.save()
+    applications = Applications.objects.all()
+    serializer = ApplicationsSerializer(applications, many=True)
+    return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['Get'])
 def get_list_applications(request, format=None):

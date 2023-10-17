@@ -60,3 +60,6 @@ class Users(models.Model):
         managed = False
         db_table = 'users'
 
+# 1 Добавить автополя для PK
+# 2 Исправить название таблицы + action_id_id
+# 3 MINio
