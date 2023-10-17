@@ -1,0 +1,6 @@
+{% load static %}
+<div class="grid-item">
+    <img src="{% static element.img %}" alt="" class="img__item">
+    <a href="{% url 'order_url' element.id %}">{{ element.title }}</a>
+    <p>Price: {{ element.price }}</p>
+</div>
