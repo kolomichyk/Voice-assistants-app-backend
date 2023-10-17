@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Голосовые помощники{% endblock %}
+
+{% block content %}
+<div class="body__container">
+    <form action="" method="get" class="search__items">
+        {% csrf_token %}
+        <div class="search__container">
+            <input name="name_of_item" type="text" value={{data.input_value}}>
+            <input type="submit" value="Поиск">
+        </div>
+    </form>
+    <div class="grid-container">
+        {% for action in data.actions %}
+            {% include 'order_element.html' with element=action %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
