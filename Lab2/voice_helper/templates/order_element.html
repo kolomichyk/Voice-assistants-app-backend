@@ -1,6 +1,6 @@
 {% load static %}
 <div class="grid-item">
     <img src="{% static element.img %}" alt="" class="img__item">
-    <a href="{% url 'order_url' element.id %}">{{ element.title }}</a>
-    <a href="{% url 'delete_url' element.id %}" class="delete-button">Удалить</a>
+    <a href="{% url 'order_url' element.action_id %}">{{ element.title }}</a>
+    <a href="{% url 'delete_url' element.action_id %}" class="delete-button">Удалить</a>
 </div>
