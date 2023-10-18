@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 class Actions(models.Model):
-    id = models.AutoField(primary_key=True)
+    action_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=80)
     description = models.CharField(max_length=255)
     img = models.CharField(max_length=80)
